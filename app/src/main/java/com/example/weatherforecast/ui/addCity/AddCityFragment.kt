@@ -2,16 +2,16 @@ package com.example.weatherforecast.ui.addCity
 
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 
 import com.example.weatherforecast.R
 import dagger.android.support.DaggerFragment
+import timber.log.Timber
 import javax.inject.Inject
 
-class AddCityFragment : DaggerFragment() {
+class AddCityFragment : DaggerFragment(), SearchView.OnQueryTextListener {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -22,7 +22,8 @@ class AddCityFragment : DaggerFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.cities_list_fragment, container, false)
+        setHasOptionsMenu(true)
+        return inflater.inflate(R.layout.add_city_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -31,4 +32,23 @@ class AddCityFragment : DaggerFragment() {
         // TODO: Use the ViewModel
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        menu?.clear()
+        inflater?.inflate(R.menu.add_city_toolbar_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.action_search) {
+            Timber.d("onOptionsItemSelected: actionSearch clicked")
+            val searchView = item.actionView as SearchView
+            searchView.setOnQueryTextListener(this)
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        return false
+    }
+
+    override fun onQueryTextSubmit(query: String?) = false
 }

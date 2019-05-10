@@ -9,9 +9,10 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 
 import com.example.weatherforecast.R
+import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 
-class CitiesFragment : Fragment() {
+class CitiesFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory

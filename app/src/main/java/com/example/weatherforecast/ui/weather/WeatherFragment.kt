@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 
 import com.example.weatherforecast.R
+import dagger.android.support.DaggerFragment
+import timber.log.Timber
 import javax.inject.Inject
 
-class WeatherFragment : Fragment() {
+class WeatherFragment : DaggerFragment() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -28,7 +30,7 @@ class WeatherFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(WeatherViewModel::class.java)
-        // TODO: Use the ViewModel
+        Timber.d("onActivityCreated: viewModel.fetchWeatherTest(): ${viewModel.fetchWeatherTest()}")
     }
 
 }
