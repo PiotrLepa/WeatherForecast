@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="@android:color/holo_blue_light">
+
+    <TextView
+        android:id="@+id/temperatureText"
+        style="@style/WeatherMainTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="15" />
+
+    <TextView
+        android:id="@+id/weatherCondition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        tools:text="Cloudy"
+        style="@style/WeatherMainTextViewStyle"
+        app:layout_constraintBottom_toBottomOf="@+id/temperatureText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/temperatureText"
+        app:layout_constraintTop_toTopOf="@+id/temperatureText" />
+
+    <TextView
+        android:id="@+id/weatherConditionDescription"
+        style="@style/WeatherHeaderTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/weatherCondition"
+        app:layout_constraintStart_toStartOf="@+id/weatherCondition"
+        app:layout_constraintTop_toBottomOf="@+id/weatherCondition"
+        tools:text="overcast clouds" />
+
+    <TextView
+        android:id="@+id/maxTemperatureText"
+        style="@style/WeatherDescriptionTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/temperatureText"
+        tools:text="16" />
+
+    <TextView
+        android:id="@+id/seperatorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" / "
+        style="@style/WeatherDescriptionTextViewStyle"
+        app:layout_constraintBottom_toBottomOf="@+id/maxTemperatureText"
+        app:layout_constraintStart_toEndOf="@+id/maxTemperatureText"
+        app:layout_constraintTop_toTopOf="@+id/maxTemperatureText" />
+
+    <TextView
+        android:id="@+id/minTemperatureText"
+        style="@style/WeatherDescriptionTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/maxTemperatureText"
+        app:layout_constraintStart_toEndOf="@+id/seperatorText"
+        app:layout_constraintTop_toTopOf="@+id/maxTemperatureText"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="10" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/weatherConditionDescription" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <TextView
+        android:id="@+id/windSpeedTextView"
+        style="@style/WeatherHeaderTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/wind_degree"
+        app:layout_constraintBottom_toBottomOf="@+id/windDegreeTextView"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/windDegreeTextView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/windSpeedText"
+        style="@style/WeatherDescriptionTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/windDegreeTextView"
+        app:layout_constraintTop_toBottomOf="@+id/windDegreeTextView"
+        tools:text="1.35" />
+
+    <TextView
+        android:id="@+id/windDegreeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/wind_speed"
+        style="@style/WeatherHeaderTextViewStyle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <TextView
+        android:id="@+id/windDegreeText"
+        style="@style/WeatherDescriptionTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/windSpeedTextView"
+        app:layout_constraintTop_toBottomOf="@+id/windSpeedTextView"
+        tools:text="238" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/windDegreeText" />
+
+    <TextView
+        android:id="@+id/cloudinessTextView"
+        style="@style/WeatherHeaderTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/cloudiness"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider3" />
+
+    <TextView
+        android:id="@+id/cloudinessText"
+        style="@style/WeatherDescriptionTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/cloudinessTextView"
+        app:layout_constraintTop_toBottomOf="@+id/cloudinessTextView"
+        tools:text="100%" />
+
+    <TextView
+        android:id="@+id/atmosphericPeessureTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        style="@style/WeatherHeaderTextViewStyle"
+        android:text="@string/pressure"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+    <TextView
+        android:id="@+id/atmosphericPressureText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="1009 hpa"
+        style="@style/WeatherDescriptionTextViewStyle"
+        app:layout_constraintStart_toStartOf="@+id/atmosphericPeessureTextView"
+        app:layout_constraintTop_toBottomOf="@+id/atmosphericPeessureTextView" />
+
+    <TextView
+        android:id="@+id/airHumidityTextView"
+        style="@style/WeatherHeaderTextViewStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/humidity"
+        app:layout_constraintBottom_toTopOf="@+id/atmosphericPressureText"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/atmosphericPeessureTextView" />
+
+    <TextView
+        android:id="@+id/airHumidityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="92%"
+        style="@style/WeatherDescriptionTextViewStyle"
+        app:layout_constraintStart_toStartOf="@+id/airHumidityTextView"
+        app:layout_constraintTop_toBottomOf="@+id/airHumidityTextView" />
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="395dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="16dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/airHumidityText" />
+
+    <TextView
+        android:id="@+id/visibilityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/visibility"
+        style="@style/WeatherHeaderTextViewStyle"
+        app:layout_constraintBottom_toBottomOf="@+id/cloudinessTextView"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/cloudinessTextView" />
+
+    <TextView
+        android:id="@+id/visibilityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="10000 m"
+        style="@style/WeatherDescriptionTextViewStyle"
+        app:layout_constraintStart_toStartOf="@+id/visibilityTextView"
+        app:layout_constraintTop_toBottomOf="@+id/visibilityTextView" />
+</androidx.constraintlayout.widget.ConstraintLayout>

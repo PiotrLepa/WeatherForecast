@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.weather.WeatherFragment">
+        tools:context=".ui.weather.WeatherFragment"
+        android:id="@+id/swipeRefreshLayout"
+        android:background="@color/blue">
 
-    <TextView
+    <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello"/>
+            android:layout_height="match_parent">
 
-</FrameLayout>
+        <!--TODO change to Weather View-->
+        <View
+                android:id="@+id/weatherView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/weatherViewSize"/>
+
+        <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/weatherViewSize"/>
+
+                <!--TODO include later-->
+                <!--<include layout="@layout/snippet_weather"/>-->
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

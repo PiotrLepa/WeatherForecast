@@ -10,7 +10,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.weatherforecast"
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -52,10 +52,11 @@ dependencies {
     def lifecycle_version = "2.0.0"
     // ViewModel and LiveData
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0-alpha04"
 
     //navigation architecture
-    implementation 'android.arch.navigation:navigation-fragment:1.0.0'
-    implementation 'android.arch.navigation:navigation-ui:1.0.0'
+    implementation 'android.arch.navigation:navigation-fragment-ktx:1.0.0'
+    implementation 'android.arch.navigation:navigation-ui-ktx:1.0.0'
 
     def room_version = "2.1.0-alpha07"
     implementation "androidx.room:room-runtime:$room_version"
