@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,7 +15,7 @@
             app:layout_constraintGuide_begin="?attr/actionBarSize" />
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/citiesWeatherRecyclerView"
+            android:id="@+id/citiesRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
@@ -29,4 +29,4 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline" />
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

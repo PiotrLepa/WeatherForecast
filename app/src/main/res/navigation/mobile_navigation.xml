@@ -7,5 +7,14 @@
     <fragment android:id="@+id/weatherFragment" android:name="com.example.weatherforecast.ui.weather.WeatherFragment"
               android:label="weather_fragment" tools:layout="@layout/weather_fragment"/>
     <fragment android:id="@+id/citiesFragment" android:name="com.example.weatherforecast.ui.cities.CitiesFragment"
-              android:label="cities_fragment" tools:layout="@layout/cities_fragment"/>
+              android:label="cities_fragment" tools:layout="@layout/cities_fragment">
+        <action android:id="@+id/action_citiesFragment_to_addCityFragment" app:destination="@id/addCityFragment"/>
+        <argument android:name="selectedCity" app:argType="com.example.weatherforecast.db.entity.City"
+                  app:nullable="true" android:defaultValue="@null"/>
+    </fragment>
+    <fragment android:id="@+id/addCityFragment" android:name="com.example.weatherforecast.ui.addCity.AddCityFragment"
+              android:label="add_city_fragment" tools:layout="@layout/add_city_fragment">
+        <action android:id="@+id/action_addCityFragment_to_citiesFragment" app:destination="@id/citiesFragment"
+                app:popUpTo="@+id/citiesFragment"/>
+    </fragment>
 </navigation>
