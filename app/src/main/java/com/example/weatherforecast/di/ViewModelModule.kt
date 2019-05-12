@@ -2,10 +2,8 @@ package com.example.weatherforecast.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.weatherforecast.di.viewModelUtils.ViewModelKey
 import com.example.weatherforecast.ui.addCity.AddCityViewModel
 import com.example.weatherforecast.ui.cities.CitiesViewModel
-import com.example.weatherforecast.ui.weather.WeatherFragment
 import com.example.weatherforecast.ui.weather.WeatherViewModel
 import com.example.weatherforecast.util.WeatherForecastViewModelFactory
 import dagger.Binds

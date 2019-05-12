@@ -1,4 +1,4 @@
-package com.example.weatherforecast.di.viewModelUtils
+package com.example.weatherforecast.di
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

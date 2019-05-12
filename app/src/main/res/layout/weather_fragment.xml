@@ -12,8 +12,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <!--TODO change to Weather View-->
-        <View
+        <com.example.weatherforecast.ui.view.WeatherView
                 android:id="@+id/weatherView"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/weatherViewSize"/>
@@ -32,8 +31,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/weatherViewSize"/>
 
-                <!--TODO include later-->
-                <!--<include layout="@layout/snippet_weather"/>-->
+                <include layout="@layout/snippet_weather"/>
 
             </LinearLayout>
 

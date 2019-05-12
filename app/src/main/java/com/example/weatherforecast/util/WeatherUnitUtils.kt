@@ -1,5 +1,9 @@
 package com.example.weatherforecast.util
 
+import com.example.weatherforecast.WEATHER_API_REFRESH_DELAY
+import org.joda.time.DateTime
+import timber.log.Timber
+
 
 class WeatherUnitUtils {
 
@@ -20,27 +24,27 @@ class WeatherUnitUtils {
 
         private val PERCENT = "%"
 
-        fun formatTemperature(temp: String): String {
+        fun formatTemperature(temp: Double): String {
             return roundValue(temp) + TEMP_UNIT
         }
 
-        fun formatWindSpeed(wind: String): String {
+        fun formatWindSpeed(wind: Double): String {
             return roundValue(wind) + WIND_SPEED_METRIC_UNIT
         }
 
-        fun formatWindDegree(wind: String): String {
+        fun formatWindDegree(wind: Double): String {
             return roundValue(wind) + DEGREE_CODE
         }
 
-        fun formatAtmosphericPressure(pressure: String): String {
-            return roundValue(pressure) + ATMOSPHERIC_PRESSURE_UNIT
+        fun formatAtmosphericPressure(pressure: Int): String {
+            return pressure.toString() + ATMOSPHERIC_PRESSURE_UNIT
         }
 
-        fun formatAirHumidity(airHumidity: String): String {
-            return airHumidity + PERCENT
+        fun formatAirHumidity(airHumidity: Int): String {
+            return airHumidity.toString() + PERCENT
         }
 
-        fun formatVisibility(visibility: String?): String {
+        fun formatVisibility(visibility: Int?): String {
             return if (visibility == null) {
                 "-"
             } else {
@@ -52,9 +56,20 @@ class WeatherUnitUtils {
             return CONDITION_IMAGE_URL + conditionImage + IMAGE_EXTENSION
         }
 
-        private fun roundValue(value: String?): String {
+        fun formatUpdateTime(updateTime: Long): String {
+            val timeDifference = System.currentTimeMillis() / 1000 - updateTime
+            Timber.d("formatUpdateTime: timeDifference: $timeDifference")
+//            return if (timeDifference < WEATHER_API_REFRESH_DELAY) {
+//                "Just Updated"
+//            } else {
+//                "Updated ${timeDifference / 60} minutes ago"
+//            }
+            return "Updated ${timeDifference / 60} minutes ago"
+        }
+
+        private fun roundValue(value: Double?): String {
             return if (value != null) {
-                Math.round(java.lang.Float.parseFloat(value)).toString()
+                Math.round(value).toString()
             } else {
                 "-"
             }
