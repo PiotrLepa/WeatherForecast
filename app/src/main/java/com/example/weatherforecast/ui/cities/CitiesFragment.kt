@@ -48,27 +48,31 @@ class CitiesFragment : DaggerFragment() {
         setupViews()
 
         val selectedCity = getSelectedCityArgs()
-        if (selectedCity != null) {
-//            viewModel.fetchWeather(selectedCity.id)
+        selectedCity?.let {
             viewModel.onCityAdded(selectedCity)
         }
 
         viewModel.citiesList.observe(viewLifecycleOwner, Observer { citiesList ->
-            viewModel.fetchCitiesWeathers(citiesList)
+            Timber.d("onActivityCreated: citiesList size: ${citiesList.size}")
+            //if is something in room database
+            if (citiesList.size >= 1 ) {
+                viewModel.fetchCitiesWeathers(citiesList)
+            }
         })
 
         viewModel.citiesWeathers.observe(viewLifecycleOwner, Observer {
-            Timber.d("onActivityCreated: status: ${it.status}")
+            Timber.d("onActivityCreated: citiesWeathers status: ${it.status}")
             when (it.status) {
                 LOADING -> {
 
                 }
                 SUCCESS -> {
-                    Timber.d("onActivityCreated: listSize: ${it.data!!.size}")
+                    Timber.d("onActivityCreated: SUCCESS listSize: ${it.data!!.size}")
                     citiesWeatherAdapter.clear()
                     citiesWeatherAdapter.addAll(it.data.map { CityWeatherItem(it) })
                 }
                 ERROR -> {
+                    Toast.makeText(context, "Error ${it.message}", Toast.LENGTH_SHORT).show()
                 }
             }
         })

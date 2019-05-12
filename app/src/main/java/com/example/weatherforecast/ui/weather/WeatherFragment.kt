@@ -54,7 +54,7 @@ class WeatherFragment : DaggerFragment() {
             updateUi(selectedCityWeather)
             viewModel.fetchWeather(selectedCityWeather.id)
         } else {
-            //TODO first app launch
+            viewModel.loadLatestFetchedWeather()
         }
 
         viewModel.weather.observe(viewLifecycleOwner, Observer { 

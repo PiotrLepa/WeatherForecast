@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import com.example.weatherforecast.db.entity.WeatherResponse
 import com.example.weatherforecast.repository.WeatherForecastRepository
 import com.example.weatherforecast.util.wrapper.Resource
-import com.example.weatherforecast.util.wrapper.Status
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -25,7 +24,16 @@ class WeatherViewModel @Inject constructor(
     }
 
     fun refreshWeather() {
-        Timber.d("refreshWeather: cityIdLive.value: ${cityIdLive.value}")
         cityIdLive.value = cityIdLive.value
+    }
+
+    fun loadLatestFetchedWeather() {
+        val latestWeather = repo.getLatestInsertedWeather()
+        latestWeather.observeForever(object : Observer<WeatherResponse> {
+            override fun onChanged(weather: WeatherResponse?) {
+                latestWeather.removeObserver(this)
+                weather?.let { cityIdLive.value = it.id }
+            }
+        })
     }
 }

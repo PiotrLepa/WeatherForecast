@@ -1,9 +1,6 @@
 package com.example.weatherforecast.util
 
-import com.example.weatherforecast.WEATHER_API_REFRESH_DELAY
-import org.joda.time.DateTime
 import timber.log.Timber
-import kotlin.math.round
 
 
 class WeatherUnitUtils {
@@ -49,7 +46,7 @@ class WeatherUnitUtils {
             return if (visibility == null) {
                 "-"
             } else {
-                 "$${roundValue(visibility)}m"
+                 "${roundValue(visibility)}m"
             }
         }
 

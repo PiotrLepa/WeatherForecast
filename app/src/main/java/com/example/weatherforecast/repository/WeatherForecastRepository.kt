@@ -2,6 +2,7 @@ package com.example.weatherforecast.repository
 
 import androidx.lifecycle.LiveData
 import com.example.weatherforecast.AppExecutors
+import com.example.weatherforecast.WEATHER_API_REFRESH_DELAY_SECONDS
 import com.example.weatherforecast.api.ApiResponse
 import com.example.weatherforecast.api.OpenWeatherApiService
 import com.example.weatherforecast.db.CityDao
@@ -9,8 +10,10 @@ import com.example.weatherforecast.db.WeatherDao
 import com.example.weatherforecast.db.entity.City
 import com.example.weatherforecast.db.entity.WeatherResponse
 import com.example.weatherforecast.db.entity.WeathersListResponse
+import com.example.weatherforecast.util.RateLimiter
 import com.example.weatherforecast.util.wrapper.Resource
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,6 +25,8 @@ class WeatherForecastRepository @Inject constructor(
     private val apiService: OpenWeatherApiService
 ) {
 
+    private val rateLimiter = RateLimiter<Int>(WEATHER_API_REFRESH_DELAY_SECONDS, TimeUnit.SECONDS)
+
     fun addCity(city: City) {
         appExecutors.diskIO().execute {
             cityDao.insertCity(city)
@@ -32,18 +37,20 @@ class WeatherForecastRepository @Inject constructor(
         return cityDao.getCitiesList()
     }
 
+    fun getLatestInsertedWeather(): LiveData<WeatherResponse> {
+        return weatherDao.getLatestInsertedWeather()
+    }
+
     fun fetchWeather(cityId: Int): LiveData<Resource<WeatherResponse>> {
         return object: NetworkBoundResource<WeatherResponse, WeatherResponse>(appExecutors) {
             override fun saveCallResult(item: WeatherResponse) {
                 weatherDao.insertWeather(item)
             }
 
-            override fun shouldFetch(data: WeatherResponse?): Boolean {
-                return true
-            }
+            override fun shouldFetch(data: WeatherResponse?) = data == null || rateLimiter.shouldFetch(data.id)
 
             override fun loadFromDb(): LiveData<WeatherResponse> {
-                return weatherDao.getCurrentWeather(cityId)
+                return weatherDao.getCityWeather(cityId)
             }
 
             override fun createCall(): LiveData<ApiResponse<WeatherResponse>> {
@@ -62,11 +69,15 @@ class WeatherForecastRepository @Inject constructor(
             }
 
             override fun shouldFetch(data: List<WeatherResponse>?): Boolean {
-                return true
+                if (data == null || data.size != citiesIds.size) return true
+                val shouldFetchList = data.map {
+                    return rateLimiter.shouldFetch(it.id)
+                }
+                return !shouldFetchList.contains(true)
             }
 
             override fun loadFromDb(): LiveData<List<WeatherResponse>> {
-                return weatherDao.getCitiesWeatherList(citiesIds)
+                return weatherDao.getCitiesWeathersList(citiesIds)
             }
 
             override fun createCall(): LiveData<ApiResponse<WeathersListResponse>> {

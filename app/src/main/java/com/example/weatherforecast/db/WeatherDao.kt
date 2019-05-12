@@ -17,11 +17,11 @@ interface WeatherDao {
     fun insertWeathersList(weathersList: List<WeatherResponse>)
 
     @Query("SELECT * FROM citiesWeathers WHERE id = :cityId")
-    fun getCurrentWeather(cityId: Int): LiveData<WeatherResponse>
+    fun getCityWeather(cityId: Int): LiveData<WeatherResponse>
 
     @Query("SELECT * FROM citiesWeathers WHERE id IN (:citiesId)")
-    fun getCitiesWeatherList(citiesId: List<Int>): LiveData<List<WeatherResponse>>
+    fun getCitiesWeathersList(citiesId: List<Int>): LiveData<List<WeatherResponse>>
 
-    @Query("SELECT * FROM citiesWeathers")
-    fun getCitiesId(): LiveData<List<WeatherResponse>>
+    @Query("SELECT * FROM citiesWeathers ORDER BY insertTime DESC LIMIT 1")
+    fun getLatestInsertedWeather(): LiveData<WeatherResponse>
 }

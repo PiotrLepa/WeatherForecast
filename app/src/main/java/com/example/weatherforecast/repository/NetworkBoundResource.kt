@@ -27,7 +27,9 @@ abstract class NetworkBoundResource<ResultType, RequestType>
         result.value = Resource.loading(null)
         @Suppress("LeakingThis")
         val dbSource = loadFromDb()
+        Timber.d("init started: ")
         result.addSource(dbSource) { data ->
+            Timber.d("init data: $data")
             result.removeSource(dbSource)
             if (shouldFetch(data)) {
                 fetchFromNetwork(dbSource)
@@ -55,6 +57,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>
         result.addSource(apiResponse) { response ->
             result.removeSource(apiResponse)
             result.removeSource(dbSource)
+            Timber.d("fetchFromNetwork: response: $response")
             when (response) {
                 is ApiSuccessResponse -> {
                     appExecutors.diskIO().execute {
