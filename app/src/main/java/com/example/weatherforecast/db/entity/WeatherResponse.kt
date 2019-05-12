@@ -15,12 +15,12 @@ data class WeatherResponse(
     val cod: Int,
     @Embedded(prefix = "coord_")
     val coord: Coord,
-    val dt: Int,
+    val dt: Long,
     @Embedded(prefix = "main_")
     val main: Main,
     val name: String,
     @Embedded(prefix = "rain")
-    val rain: Rain,
+    val rain: Rain?,
     @Embedded(prefix = "sys_")
     val sys: Sys,
     val weather: List<Weather>,

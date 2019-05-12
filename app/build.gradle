@@ -55,10 +55,6 @@ dependencies {
     //Better logging
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
-    //coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.1'
-
     //recycler view adapter
     implementation 'com.xwray:groupie:2.3.0'
     implementation 'com.xwray:groupie-kotlin-android-extensions:2.3.0'

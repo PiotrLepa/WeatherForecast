@@ -4,13 +4,20 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.example.weatherforecast.AppExecutors
 import com.example.weatherforecast.api.ApiEmptyResponse
 import com.example.weatherforecast.api.ApiErrorResponse
 import com.example.weatherforecast.api.ApiResponse
 import com.example.weatherforecast.api.ApiSuccessResponse
 import com.example.weatherforecast.util.wrapper.Resource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
 
-abstract class NetworkBoundResource<ResultType, RequestType> {
+abstract class NetworkBoundResource<ResultType, RequestType>
+@MainThread constructor(private val appExecutors: AppExecutors) {
 
     private val result = MediatorLiveData<Resource<ResultType>>()
 
@@ -48,27 +55,25 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
             result.removeSource(dbSource)
             when (response) {
                 is ApiSuccessResponse -> {
-                    //TODO use coroutines to handle this
-//                    appExecutors.diskIO().execute {
-//                        saveCallResult(processResponse(response))
-//                        appExecutors.mainThread().execute {
-//                            // we specially request a new live data,
-//                            // otherwise we will get immediately last cached value,
-//                            // which may not be updated with latest results received from network.
-//                            result.addSource(loadFromDb()) { newData ->
-//                                setValue(Resource.success(newData))
-//                            }
-//                        }
-//                    }
+                    appExecutors.diskIO().execute {
+                        saveCallResult(processResponse(response))
+                        appExecutors.mainThread().execute {
+                            // we specially request a new live data,
+                            // otherwise we will get immediately last cached value,
+                            // which may not be updated with latest results received from network.
+                            result.addSource(loadFromDb()) { newData ->
+                                setValue(Resource.success(newData))
+                            }
+                        }
+                    }
                 }
                 is ApiEmptyResponse -> {
-                    //TODO use coroutines to handle this
-//                    appExecutors.mainThread().execute {
-//                        // reload from disk whatever we had
-//                        result.addSource(loadFromDb()) { newData ->
-//                            setValue(Resource.success(newData))
-//                        }
-//                    }
+                    appExecutors.mainThread().execute {
+                        // reload from disk whatever we had
+                        result.addSource(loadFromDb()) { newData ->
+                            setValue(Resource.success(newData))
+                        }
+                    }
                 }
                 is ApiErrorResponse -> {
                     onFetchFailed()

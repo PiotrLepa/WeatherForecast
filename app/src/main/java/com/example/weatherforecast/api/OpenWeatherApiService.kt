@@ -2,6 +2,7 @@ package com.example.weatherforecast.api
 
 import androidx.lifecycle.LiveData
 import com.example.weatherforecast.db.entity.WeatherResponse
+import com.example.weatherforecast.util.LiveDataCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -27,6 +28,7 @@ interface OpenWeatherApiService {
                     .url()
                     .newBuilder()
                     .addQueryParameter("APPID", API_KEY)
+                    .addQueryParameter("units", "metric")
                     .build()
                 val request = chain.request()
                     .newBuilder()
@@ -44,6 +46,7 @@ interface OpenWeatherApiService {
                 .client(okHttpClient)
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(LiveDataCallAdapterFactory())
                 .build()
                 .create(OpenWeatherApiService::class.java)
         }
