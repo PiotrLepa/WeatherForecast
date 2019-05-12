@@ -3,6 +3,7 @@ package com.example.weatherforecast.util
 import com.example.weatherforecast.WEATHER_API_REFRESH_DELAY
 import org.joda.time.DateTime
 import timber.log.Timber
+import kotlin.math.round
 
 
 class WeatherUnitUtils {
@@ -36,23 +37,23 @@ class WeatherUnitUtils {
             return roundValue(wind) + DEGREE_CODE
         }
 
-        fun formatAtmosphericPressure(pressure: Int): String {
-            return pressure.toString() + ATMOSPHERIC_PRESSURE_UNIT
+        fun formatAtmosphericPressure(pressure: Double): String {
+            return roundValue(pressure) + ATMOSPHERIC_PRESSURE_UNIT
         }
 
-        fun formatAirHumidity(airHumidity: Int): String {
-            return airHumidity.toString() + PERCENT
+        fun formatAirHumidity(airHumidity: Double): String {
+            return roundValue(airHumidity) + PERCENT
         }
 
-        fun formatVisibility(visibility: Int?): String {
+        fun formatVisibility(visibility: Double?): String {
             return if (visibility == null) {
                 "-"
             } else {
-                 "${visibility}m"
+                 "$${roundValue(visibility)}m"
             }
         }
 
-        fun getWeatherCondictionIconUrl(conditionImage: String): String {
+        fun getWeatherConditionIconUrl(conditionImage: String): String {
             return CONDITION_IMAGE_URL + conditionImage + IMAGE_EXTENSION
         }
 
