@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 
 import com.example.weatherforecast.R
 import com.example.weatherforecast.db.entity.WeatherResponse
@@ -46,7 +48,14 @@ class WeatherFragment : DaggerFragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(WeatherViewModel::class.java)
 
         setupPullToRefresh()
-        viewModel.fetchWeather()
+
+        val selectedCityWeather = getSelectedCityWeatherArgs()
+        if (selectedCityWeather != null) {
+            updateUi(selectedCityWeather)
+            viewModel.fetchWeather(selectedCityWeather.id)
+        } else {
+            //TODO first app launch
+        }
 
         viewModel.weather.observe(viewLifecycleOwner, Observer { 
             Timber.d("onActivityCreated: $it")
@@ -60,6 +69,7 @@ class WeatherFragment : DaggerFragment() {
                 }
                 ERROR -> {
                     swipeRefreshLayout.isRefreshing = false
+                    Toast.makeText(context, "Updating error", Toast.LENGTH_SHORT).show()
                 }
             }
         })
@@ -67,8 +77,13 @@ class WeatherFragment : DaggerFragment() {
 
     private fun setupPullToRefresh() {
         swipeRefreshLayout.setOnRefreshListener {
-            viewModel.fetchWeather()
+            viewModel.refreshWeather()
         }
+    }
+
+    private fun getSelectedCityWeatherArgs(): WeatherResponse? {
+        val safeArgs: WeatherFragmentArgs by navArgs()
+        return safeArgs.selectedCity
     }
 
     private fun updateUi(data: WeatherResponse) {

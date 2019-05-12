@@ -4,17 +4,37 @@
             xmlns:tools="http://schemas.android.com/tools" android:id="@+id/mobile_navigation"
             app:startDestination="@id/weatherFragment">
 
-    <fragment android:id="@+id/weatherFragment" android:name="com.example.weatherforecast.ui.weather.WeatherFragment"
-              android:label="weather_fragment" tools:layout="@layout/weather_fragment"/>
-    <fragment android:id="@+id/citiesFragment" android:name="com.example.weatherforecast.ui.cities.CitiesFragment"
-              android:label="cities_fragment" tools:layout="@layout/cities_fragment">
-        <action android:id="@+id/action_citiesFragment_to_addCityFragment" app:destination="@id/addCityFragment"/>
-        <argument android:name="selectedCity" app:argType="com.example.weatherforecast.db.entity.City"
+    <fragment
+            android:id="@+id/weatherFragment"
+            android:name="com.example.weatherforecast.ui.weather.WeatherFragment"
+            android:label=""
+            tools:layout="@layout/weather_fragment">
+        <argument android:name="selectedCity" app:argType="com.example.weatherforecast.db.entity.WeatherResponse"
                   app:nullable="true" android:defaultValue="@null"/>
     </fragment>
-    <fragment android:id="@+id/addCityFragment" android:name="com.example.weatherforecast.ui.addCity.AddCityFragment"
-              android:label="add_city_fragment" tools:layout="@layout/add_city_fragment">
-        <action android:id="@+id/action_addCityFragment_to_citiesFragment" app:destination="@id/citiesFragment"
-                app:popUpTo="@+id/citiesFragment"/>
+    <fragment
+            android:id="@+id/citiesFragment"
+            android:name="com.example.weatherforecast.ui.cities.CitiesFragment"
+            android:label="Select city"
+            tools:layout="@layout/cities_fragment">
+        <action
+                android:id="@+id/action_citiesFragment_to_addCityFragment"
+                app:destination="@id/addCityFragment"/>
+        <argument
+                android:name="selectedCity"
+                app:argType="com.example.weatherforecast.db.entity.City"
+                app:nullable="true" android:defaultValue="@null"/>
+        <action android:id="@+id/action_citiesFragment_to_weatherFragment" app:destination="@id/weatherFragment"
+                app:popUpToInclusive="true" app:popUpTo="@+id/weatherFragment"/>
+    </fragment>
+    <fragment
+            android:id="@+id/addCityFragment"
+            android:name="com.example.weatherforecast.ui.addCity.AddCityFragment"
+            android:label="Search city"
+            tools:layout="@layout/add_city_fragment">
+        <action
+                android:id="@+id/action_addCityFragment_to_citiesFragment"
+                app:destination="@id/citiesFragment"
+                app:popUpTo="@+id/citiesFragment" app:popUpToInclusive="true"/>
     </fragment>
 </navigation>

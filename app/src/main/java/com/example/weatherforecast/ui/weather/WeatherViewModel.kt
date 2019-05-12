@@ -12,15 +12,20 @@ class WeatherViewModel @Inject constructor(
     private val repo: WeatherForecastRepository
 ): ViewModel() {
 
-    private val shouldRefreshWeather = MutableLiveData<Boolean>()
+    private val cityIdLive = MutableLiveData<Int>()
 
     val weather: LiveData<Resource<WeatherResponse>> =
-        Transformations.switchMap(shouldRefreshWeather) { shouldRefresh ->
-            Timber.d("switchMap shouldRefresh: $shouldRefresh")
-            return@switchMap repo.fetchWeather(7532542)
+        Transformations.switchMap(cityIdLive) { cityId ->
+            Timber.d("switchMap shouldRefresh: $cityId")
+            return@switchMap repo.fetchWeather(cityId)
         }
 
-    fun fetchWeather() {
-        shouldRefreshWeather.value = true
+    fun fetchWeather(cityId: Int) {
+        cityIdLive.value = cityId
+    }
+
+    fun refreshWeather() {
+        Timber.d("refreshWeather: cityIdLive.value: ${cityIdLive.value}")
+        cityIdLive.value = cityIdLive.value
     }
 }

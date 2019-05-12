@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.onNavDestinationSelected
@@ -14,24 +14,27 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : DaggerAppCompatActivity() {
 
+    private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        navController = findNavController(R.id.navHostFragment)
+
         setSupportActionBar(toolbar)
+        NavigationUI.setupActionBarWithNavController(this, navController)
     }
 
+    override fun onSupportNavigateUp() =
+        navController.navigateUp()
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val retValue = super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.main_toolbar_menu, menu)
-        return retValue
+        return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        item?.let {
-            return item.onNavDestinationSelected(findNavController(R.id.navHostFragment))
-                    || super.onOptionsItemSelected(item)
-        }
-        return super.onOptionsItemSelected(item)
-    }
+    override fun onOptionsItemSelected(item: MenuItem) =
+        item.onNavDestinationSelected(navController) ||
+                super.onOptionsItemSelected(item)
 }
