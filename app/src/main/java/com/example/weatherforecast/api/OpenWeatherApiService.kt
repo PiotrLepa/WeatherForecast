@@ -2,6 +2,7 @@ package com.example.weatherforecast.api
 
 import androidx.lifecycle.LiveData
 import com.example.weatherforecast.db.entity.WeatherResponse
+import com.example.weatherforecast.db.entity.WeathersListResponse
 import com.example.weatherforecast.util.LiveDataCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -9,7 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-
+import timber.log.Timber
 
 
 const val BASE_URL = "http://api.openweathermap.org/data/2.5/"
@@ -19,6 +20,12 @@ interface OpenWeatherApiService {
 
     @GET("weather")
     fun getWeather(@Query("id") cityId: Int): LiveData<ApiResponse<WeatherResponse>>
+
+    @GET("group")
+    fun getCitiesWeathers(@Query("id") citiesIds: List<Int>): LiveData<ApiResponse<WeathersListResponse>>
+
+    @GET("group")
+    fun getCitiesWeathers(@Query("id") citiesIds: String): LiveData<ApiResponse<WeathersListResponse>>
 
     companion object {
         operator fun invoke(): OpenWeatherApiService {
@@ -34,6 +41,8 @@ interface OpenWeatherApiService {
                     .newBuilder()
                     .url(url)
                     .build()
+                
+                Timber.d("invoke: ${url}")
 
                 return@Interceptor chain.proceed(request)
             }

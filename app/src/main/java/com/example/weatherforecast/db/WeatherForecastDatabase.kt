@@ -17,4 +17,5 @@ import com.example.weatherforecast.db.entity.WeatherResponse
 abstract class WeatherForecastDatabase : RoomDatabase() {
 
     abstract fun weatherDao(): WeatherDao
+    abstract fun cityDao(): CityDao
 }

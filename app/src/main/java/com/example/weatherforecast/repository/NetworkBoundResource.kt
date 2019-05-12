@@ -9,11 +9,13 @@ import com.example.weatherforecast.api.ApiEmptyResponse
 import com.example.weatherforecast.api.ApiErrorResponse
 import com.example.weatherforecast.api.ApiResponse
 import com.example.weatherforecast.api.ApiSuccessResponse
+import com.example.weatherforecast.db.entity.WeathersListResponse
 import com.example.weatherforecast.util.wrapper.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import kotlin.coroutines.CoroutineContext
 
 abstract class NetworkBoundResource<ResultType, RequestType>
@@ -56,6 +58,9 @@ abstract class NetworkBoundResource<ResultType, RequestType>
             when (response) {
                 is ApiSuccessResponse -> {
                     appExecutors.diskIO().execute {
+                        if (response.body is WeathersListResponse) {
+                            Timber.d("fetchFromNetwork: size: ${response.body.weathers.size}")
+                        }
                         saveCallResult(processResponse(response))
                         appExecutors.mainThread().execute {
                             // we specially request a new live data,

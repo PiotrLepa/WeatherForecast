@@ -1,15 +1,20 @@
 package com.example.weatherforecast.db.entity
 
+import android.os.Parcelable
+import androidx.annotation.Nullable
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.weatherforecast.db.entity.weather.*
+import kotlinx.android.parcel.Parcelize
 
-@Entity(tableName = "weather")
+@Entity(tableName = "citiesWeathers")
+@Parcelize
 data class WeatherResponse(
     @PrimaryKey
     val id: Int,
-    val base: String,
+    @Nullable
+    val base: String?,
     @Embedded(prefix = "clouds_")
     val clouds: Clouds,
     val cod: Int,
@@ -27,4 +32,4 @@ data class WeatherResponse(
     @Embedded(prefix = "wind_")
     val wind: Wind,
     val insertTime: Long = System.currentTimeMillis()
-)
+) : Parcelable

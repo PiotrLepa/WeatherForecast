@@ -33,5 +33,10 @@ object AppModule {
     @Singleton
     @Provides
     @JvmStatic
+    fun provideCityDao(db: WeatherForecastDatabase) = db.cityDao()
+
+    @Singleton
+    @Provides
+    @JvmStatic
     fun provideOpenWeatherApiService() = OpenWeatherApiService()
 }

@@ -11,17 +11,17 @@ import com.example.weatherforecast.db.entity.WeatherResponse
 interface WeatherDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(weather: WeatherResponse)
+    fun insertWeather(weather: WeatherResponse)
 
-    @Query("SELECT * FROM weather WHERE id = :cityId")
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertWeathersList(weathersList: List<WeatherResponse>)
+
+    @Query("SELECT * FROM citiesWeathers WHERE id = :cityId")
     fun getCurrentWeather(cityId: Int): LiveData<WeatherResponse>
 
-    @Query("SELECT * FROM weather ORDER BY insertTime DESC LIMIT 1")
-    fun getLatestInsertedWeather(): LiveData<WeatherResponse>
-
-    @Query("SELECT * FROM weather WHERE id IN (:citiesId)")
+    @Query("SELECT * FROM citiesWeathers WHERE id IN (:citiesId)")
     fun getCitiesWeatherList(citiesId: List<Int>): LiveData<List<WeatherResponse>>
 
-    @Query("SELECT * FROM weather")
+    @Query("SELECT * FROM citiesWeathers")
     fun getCitiesId(): LiveData<List<WeatherResponse>>
 }

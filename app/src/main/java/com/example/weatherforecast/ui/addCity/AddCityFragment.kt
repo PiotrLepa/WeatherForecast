@@ -14,6 +14,7 @@ import com.example.weatherforecast.R
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import dagger.android.support.DaggerFragment
+import kotlinx.android.synthetic.main.add_city_fragment.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -24,32 +25,29 @@ class AddCityFragment : DaggerFragment(), SearchView.OnQueryTextListener {
 
     private lateinit var viewModel: AddCityViewModel
 
-    private lateinit var cityAdapter: GroupAdapter<ViewHolder>
-
-    private lateinit var citiesRecyclerView: RecyclerView
+    private lateinit var citiesAdapter: GroupAdapter<ViewHolder>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.add_city_fragment, container, false)
-        setHasOptionsMenu(true)
-        initWidgets(view)
-        setupRecyclerView()
-        return view
+        return inflater.inflate(R.layout.add_city_fragment, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(AddCityViewModel::class.java)
 
+        setHasOptionsMenu(true)
+        setupRecyclerView()
+
         viewModel.filteredCitiesList.observe(viewLifecycleOwner, Observer {
             Timber.d("onActivityCreated: it.isNullOrEmpty(): ${it.isNullOrEmpty()}")
             val items = it.map { city ->
                 CityItem(city)
             }
-            cityAdapter.clear()
-            cityAdapter.addAll(items)
+            citiesAdapter.clear()
+            citiesAdapter.addAll(items)
         })
     }
 
@@ -70,7 +68,6 @@ class AddCityFragment : DaggerFragment(), SearchView.OnQueryTextListener {
 
     override fun onQueryTextChange(newText: String?): Boolean {
         newText?.let {
-            Timber.d("onQueryTextChange: newText: $newText")
             viewModel.queryCitiesList(newText)
         }
         return false
@@ -79,17 +76,11 @@ class AddCityFragment : DaggerFragment(), SearchView.OnQueryTextListener {
     override fun onQueryTextSubmit(query: String?) = false
 
 
-    private fun initWidgets(view: View) {
-        view.apply {
-            citiesRecyclerView = findViewById(R.id.citiesRecyclerView)
-        }
-    }
-
     private fun setupRecyclerView() {
-        cityAdapter = GroupAdapter()
+        citiesAdapter = GroupAdapter()
         citiesRecyclerView.layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
-        citiesRecyclerView.adapter = cityAdapter
-        cityAdapter.setOnItemClickListener { item, _ ->
+        citiesRecyclerView.adapter = citiesAdapter
+        citiesAdapter.setOnItemClickListener { item, _ ->
             openCitiesFragment((item as CityItem))
         }
     }
