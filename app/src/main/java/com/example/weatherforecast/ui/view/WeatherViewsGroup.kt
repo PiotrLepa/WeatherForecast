@@ -21,21 +21,22 @@ class WeatherViewsGroup(
         val translationX = mMaxViewMoveSensorX * (sensorX / MAX_SENSORS_VALUE)
         val translationY = mMaxViewMoveSensorY * (sensorY / MAX_SENSORS_VALUE)
         for (view in mWeatherViews) {
+
             view.move(canvas, translationX, translationY)
         }
     }
 
     private fun createCloudyWeatherViews(): ArrayList<WeatherSingleView> {
         val weatherViews = ArrayList<WeatherSingleView>()
-        weatherViews.add(WeatherSingleView(Color.WHITE, width / 4 * 3f, 20f, width / 3.4f, width))
-        weatherViews.add(WeatherSingleView(Color.WHITE, width / 2f, 20f, width / 2.5f, width))
-        weatherViews.add(WeatherSingleView(Color.WHITE, width / 2.5f, 54f, width / 2.8f, width))
-        weatherViews.add(WeatherSingleView(Color.WHITE, -100f, -100f, width / 2.4f, width))
-        weatherViews.add(WeatherSingleView(Color.WHITE, 50f, 50f, width / 3f, width))
-        weatherViews.add(WeatherSingleView(Color.WHITE, width / 4f * 3, -150f, width / 2.9f, width))
-        weatherViews.add(WeatherSingleView(Color.WHITE, width / 4f * 3 + 30, -190f, width / 2.7f, width))
+        weatherViews.add(WeatherSingleView(Color.WHITE, true, width / 4 * 3f, 20f, width / 3.4f, width))
+        weatherViews.add(WeatherSingleView(Color.WHITE, true,width / 2f, 20f, width / 2.5f, width))
+        weatherViews.add(WeatherSingleView(Color.WHITE, true, width / 2.5f, 54f, width / 2.8f, width))
+        weatherViews.add(WeatherSingleView(Color.WHITE, true, -100f, -100f, width / 2.4f, width))
+        weatherViews.add(WeatherSingleView(Color.WHITE, true, 50f, 50f, width / 3f, width))
+        weatherViews.add(WeatherSingleView(Color.WHITE, true, width / 4f * 3, -150f, width / 2.9f, width))
+        weatherViews.add(WeatherSingleView(Color.WHITE, true, width / 4f * 3 + 30, -190f, width / 2.7f, width))
 
-        weatherViews.add(WeatherSingleView(Color.rgb(255, 200, 0), width / 3f * 2, height / 6f, width / 7f, width))
+        weatherViews.add(WeatherSingleView(Color.rgb(255, 200, 0), false, width / 3f * 2, height / 6f, width / 7f, width))
 
         return weatherViews
     }

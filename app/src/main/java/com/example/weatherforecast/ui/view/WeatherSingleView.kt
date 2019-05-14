@@ -6,6 +6,7 @@ import kotlin.random.Random
 
 class WeatherSingleView(
     color: Int,
+    private val isMoveable: Boolean,
     private var mLastX: Float,
     private var mLastY: Float,
     private val mRadius: Float,
@@ -33,6 +34,8 @@ class WeatherSingleView(
 
     fun move(canvas: Canvas, translationX: Float, translationY: Float) {
         canvas.drawCircle(mLastX + translationX, mLastY + translationY, mRadius, mPaint)
+
+        if (!isMoveable) return
 
         mLastY += mSpeedY
         mLastX += mSpeedX
