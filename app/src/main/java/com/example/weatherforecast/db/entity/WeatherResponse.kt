@@ -21,6 +21,7 @@ data class WeatherResponse(
     @Embedded(prefix = "coord_")
     val coord: Coord,
     val dt: Long,
+    val dt_txt: String?,
     @Embedded(prefix = "main_")
     val main: Main,
     val name: String,

@@ -1,6 +1,7 @@
 package com.example.weatherforecast.api
 
 import androidx.lifecycle.LiveData
+import com.example.weatherforecast.db.entity.WeatherForecastResponse
 import com.example.weatherforecast.db.entity.WeatherResponse
 import com.example.weatherforecast.db.entity.WeathersListResponse
 import com.example.weatherforecast.util.LiveDataCallAdapterFactory
@@ -21,8 +22,8 @@ interface OpenWeatherApiService {
     @GET("weather")
     fun getWeather(@Query("id") cityId: Int): LiveData<ApiResponse<WeatherResponse>>
 
-    @GET("group")
-    fun getCitiesWeathers(@Query("id") citiesIds: List<Int>): LiveData<ApiResponse<WeathersListResponse>>
+    @GET("forecast")
+    fun getForecast(@Query("id") cityId: Int): LiveData<ApiResponse<WeatherForecastResponse>>
 
     @GET("group")
     fun getCitiesWeathers(@Query("id") citiesIds: String): LiveData<ApiResponse<WeathersListResponse>>

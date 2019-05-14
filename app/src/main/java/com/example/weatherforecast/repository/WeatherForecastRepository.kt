@@ -2,16 +2,20 @@ package com.example.weatherforecast.repository
 
 import androidx.lifecycle.LiveData
 import com.example.weatherforecast.AppExecutors
+import com.example.weatherforecast.FORECAST_API_REFRESH_DELAY_SECONDS
 import com.example.weatherforecast.WEATHER_API_REFRESH_DELAY_SECONDS
 import com.example.weatherforecast.api.ApiResponse
 import com.example.weatherforecast.api.OpenWeatherApiService
 import com.example.weatherforecast.db.CityDao
 import com.example.weatherforecast.db.WeatherDao
 import com.example.weatherforecast.db.entity.City
+import com.example.weatherforecast.db.entity.WeatherForecastResponse
 import com.example.weatherforecast.db.entity.WeatherResponse
 import com.example.weatherforecast.db.entity.WeathersListResponse
 import com.example.weatherforecast.util.RateLimiter
+import com.example.weatherforecast.util.WeatherUnitUtils
 import com.example.weatherforecast.util.wrapper.Resource
+import org.joda.time.DateTime
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -25,7 +29,8 @@ class WeatherForecastRepository @Inject constructor(
     private val apiService: OpenWeatherApiService
 ) {
 
-    private val rateLimiter = RateLimiter<Int>(WEATHER_API_REFRESH_DELAY_SECONDS, TimeUnit.SECONDS)
+    private val weatherRateLimiter = RateLimiter<Int>(WEATHER_API_REFRESH_DELAY_SECONDS, TimeUnit.SECONDS)
+    private val forecastRateLimiter = RateLimiter<Int>(FORECAST_API_REFRESH_DELAY_SECONDS, TimeUnit.SECONDS)
 
     fun addCity(city: City) {
         appExecutors.diskIO().execute {
@@ -41,13 +46,34 @@ class WeatherForecastRepository @Inject constructor(
         return weatherDao.getLatestInsertedWeather()
     }
 
+    fun fetchForecast(cityId: Int): LiveData<Resource<WeatherForecastResponse>> {
+        return object: NetworkBoundResource<WeatherForecastResponse, WeatherForecastResponse>(appExecutors) {
+            override fun saveCallResult(item: WeatherForecastResponse) {
+                weatherDao.insertWeatherForecast(item)
+            }
+
+            override fun shouldFetch(data: WeatherForecastResponse?): Boolean {
+                Timber.d("shouldFetch: Forecast: ${data == null || forecastRateLimiter.shouldFetch(data.id)}")
+                return data == null || forecastRateLimiter.shouldFetch(data.id)
+            }
+
+            override fun loadFromDb(): LiveData<WeatherForecastResponse> {
+                return weatherDao.getWeatherForecast(cityId)
+            }
+
+            override fun createCall(): LiveData<ApiResponse<WeatherForecastResponse>> {
+                return apiService.getForecast(cityId)
+            }
+        }.asLiveData()
+    }
+
     fun fetchWeather(cityId: Int): LiveData<Resource<WeatherResponse>> {
         return object: NetworkBoundResource<WeatherResponse, WeatherResponse>(appExecutors) {
             override fun saveCallResult(item: WeatherResponse) {
                 weatherDao.insertWeather(item)
             }
 
-            override fun shouldFetch(data: WeatherResponse?) = data == null || rateLimiter.shouldFetch(data.id)
+            override fun shouldFetch(data: WeatherResponse?) = data == null || weatherRateLimiter.shouldFetch(data.id)
 
             override fun loadFromDb(): LiveData<WeatherResponse> {
                 return weatherDao.getCityWeather(cityId)
@@ -63,7 +89,7 @@ class WeatherForecastRepository @Inject constructor(
     }
 
     fun getCitiesWeathersList(citiesIds: List<Int>): LiveData<Resource<List<WeatherResponse>>> {
-        return object: NetworkBoundResource< List<WeatherResponse>, WeathersListResponse>(appExecutors) {
+        return object: NetworkBoundResource<List<WeatherResponse>, WeathersListResponse>(appExecutors) {
             override fun saveCallResult(item: WeathersListResponse) {
                 weatherDao.insertWeathersList(item.weathers)
             }
@@ -71,7 +97,7 @@ class WeatherForecastRepository @Inject constructor(
             override fun shouldFetch(data: List<WeatherResponse>?): Boolean {
                 if (data == null || data.size != citiesIds.size) return true
                 val shouldFetchList = data.map {
-                    return rateLimiter.shouldFetch(it.id)
+                    return weatherRateLimiter.shouldFetch(it.id)
                 }
                 return !shouldFetchList.contains(true)
             }

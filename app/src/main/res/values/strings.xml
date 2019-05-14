@@ -8,4 +8,5 @@
     <string name="pressure">Pressure</string>
     <string name="humidity">Humidity</string>
     <string name="visibility">Visibility</string>
+    <string name="hourly">Hourly</string>
 </resources>

@@ -1,11 +1,15 @@
 package com.example.weatherforecast.util
 
+import org.joda.time.format.DateTimeFormat
 import timber.log.Timber
 
 
 class WeatherUnitUtils {
 
     companion object {
+
+        val dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")
+
         private val CONDITION_IMAGE_URL = "http://openweathermap.org/img/w/"
         private val IMAGE_EXTENSION = ".png"
         private val DEGREE_CODE = "\u00b0"
@@ -48,6 +52,10 @@ class WeatherUnitUtils {
             } else {
                  "${roundValue(visibility)}m"
             }
+        }
+
+        fun formatCloudiness(cloudiness: Double?): String {
+            return roundValue(cloudiness) + PERCENT
         }
 
         fun getWeatherConditionIconUrl(conditionImage: String): String {

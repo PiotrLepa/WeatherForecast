@@ -1,5 +1,6 @@
 package com.example.weatherforecast.ui.weather
 
+import android.graphics.Color
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +10,8 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-
 import com.example.weatherforecast.R
+
 import com.example.weatherforecast.db.entity.WeatherResponse
 import com.example.weatherforecast.ui.MainActivity
 import com.example.weatherforecast.util.WeatherUnitUtils.Companion.formatAirHumidity
@@ -27,7 +28,15 @@ import javax.inject.Inject
 import com.example.weatherforecast.util.wrapper.Status.LOADING
 import com.example.weatherforecast.util.wrapper.Status.SUCCESS
 import com.example.weatherforecast.util.wrapper.Status.ERROR
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import kotlinx.android.synthetic.main.snippet_weather.*
+import android.graphics.Typeface
+import com.example.weatherforecast.util.ForecastChartUtils
+import com.example.weatherforecast.util.WeatherUnitUtils.Companion.formatCloudiness
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.formatter.ValueFormatter
+
 
 class WeatherFragment : DaggerFragment() {
 
@@ -47,18 +56,26 @@ class WeatherFragment : DaggerFragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(WeatherViewModel::class.java)
 
+        setupChart()
         setupPullToRefresh()
 
         val selectedCityWeather = getSelectedCityWeatherArgs()
         if (selectedCityWeather != null) {
             updateUi(selectedCityWeather)
             viewModel.fetchWeather(selectedCityWeather.id)
+            viewModel.fetchForecast(selectedCityWeather.id)
         } else {
             viewModel.loadLatestFetchedWeather()
         }
 
-        viewModel.weather.observe(viewLifecycleOwner, Observer { 
-            Timber.d("onActivityCreated: $it")
+        observeCurrentWeather()
+        observerForecastWeather()
+        observeChartData()
+    }
+
+    private fun observeCurrentWeather() {
+        viewModel.weather.observe(viewLifecycleOwner, Observer {
+            Timber.d("onActivityCreated weather: $it")
             when (it.status) {
                 LOADING -> {
 
@@ -75,10 +92,93 @@ class WeatherFragment : DaggerFragment() {
         })
     }
 
+    private fun observerForecastWeather() {
+        viewModel.weatherForecast.observe(viewLifecycleOwner, Observer {
+            Timber.d("onActivityCreated weatherForecast status: ${it.status}")
+            when (it.status) {
+                LOADING -> {
+
+                }
+                SUCCESS -> {
+                    Timber.d("onActivityCreated weatherForecast size: ${it.data!!.weathers.size}")
+                    swipeRefreshLayout.isRefreshing = false
+                    viewModel.onForecastFetched(it.data.weathers)
+                }
+                ERROR -> {
+                    swipeRefreshLayout.isRefreshing = false
+                    Toast.makeText(context, "Updating error", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+    }
+
+    private fun observeChartData() {
+        viewModel.chartData.observe(viewLifecycleOwner, Observer {
+            Timber.d("onActivityCreated chartData: $it")
+            setChartData(it)
+        })
+    }
+
     private fun setupPullToRefresh() {
         swipeRefreshLayout.setOnRefreshListener {
             viewModel.refreshWeather()
         }
+    }
+
+    private fun setupChart() {
+        chart.setTouchEnabled(false)
+        chart.isDragEnabled = false
+        val x = chart.xAxis
+        x.textColor = Color.WHITE
+        x.position = XAxis.XAxisPosition.BOTTOM
+        x.setDrawGridLines(false)
+        x.setDrawAxisLine(false)
+
+        chart.axisRight.isEnabled = false
+        chart.axisLeft.isEnabled = false
+
+        chart.legend.isEnabled = false
+        chart.description.isEnabled = false
+
+        chart.animateXY(2000, 2000)
+
+        chart.invalidate()
+    }
+
+    private fun setChartData(lineDataValues: ForecastChartUtils.LineDataValue) {
+        val tempSet = LineDataSet(lineDataValues.tempEntries, "Temperatures")
+        setupLineDataSet(tempSet)
+
+        val data = LineData(tempSet)
+        data.setValueTypeface(Typeface.SANS_SERIF)
+        data.setValueTextColor(Color.WHITE)
+        data.setValueTextSize(9f)
+        data.setDrawValues(true)
+        data.setValueFormatter(object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return formatTemperature(value.toDouble())
+            }
+        })
+        chart.data = data
+        chart.xAxis.setLabelCount(lineDataValues.hours.size, true)
+        chart.xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return lineDataValues.hours[value.toInt()].asShortText
+            }
+        }
+    }
+
+    private fun setupLineDataSet(set: LineDataSet) {
+        set.mode = LineDataSet.Mode.LINEAR
+//        set.cubicIntensity = 0.3f
+        set.setDrawFilled(true)
+        set.setDrawCircles(true)
+        set.lineWidth = 2f
+        set.circleRadius = 4f
+        set.setCircleColor(Color.WHITE)
+        set.color = Color.WHITE
+        set.fillColor = Color.WHITE
+        set.fillAlpha = 100
     }
 
     private fun getSelectedCityWeatherArgs(): WeatherResponse? {
@@ -101,7 +201,7 @@ class WeatherFragment : DaggerFragment() {
         atmosphericPressureText.text = formatAtmosphericPressure(data.main.pressure)
         airHumidityText.text = formatAirHumidity(data.main.humidity)
         visibilityText.text = formatVisibility(data.main.humidity)
-        cloudinessText.text = data.clouds.all.toString()
+        cloudinessText.text = formatCloudiness(data.clouds.all)
     }
 
     private fun updateToolbar(data: WeatherResponse) {
