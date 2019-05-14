@@ -1,6 +1,5 @@
 package com.example.weatherforecast.ui.cities
 
-import com.bumptech.glide.Glide
 import com.example.weatherforecast.R
 import com.example.weatherforecast.db.entity.WeatherResponse
 import com.example.weatherforecast.util.WeatherUnitUtils.Companion.formatTemperature
@@ -17,8 +16,8 @@ class CityWeatherItem(val weather: WeatherResponse) : Item() {
         viewHolder.cityNameText.text = weather.name
         viewHolder.temperatureText.text = formatTemperature(weather.main.temp)
 
-        Glide.with(viewHolder.weatherConditionImage)
-            .load(getWeatherConditionIconUrl(weather.weather[0].icon))
-            .into(viewHolder.weatherConditionImage)
+        val context = viewHolder.weatherConditionImage.context
+        val iconDrawable = context.getDrawable(getWeatherConditionIconUrl(weather))
+        viewHolder.weatherConditionImage.setImageDrawable(iconDrawable)
     }
 }

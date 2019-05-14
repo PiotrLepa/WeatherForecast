@@ -1,5 +1,9 @@
 package com.example.weatherforecast.util
 
+import android.graphics.drawable.Drawable
+import com.example.weatherforecast.R
+import com.example.weatherforecast.db.entity.WeatherResponse
+import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import timber.log.Timber
 
@@ -58,8 +62,34 @@ class WeatherUnitUtils {
             return roundValue(cloudiness) + PERCENT
         }
 
-        fun getWeatherConditionIconUrl(conditionImage: String): String {
-            return CONDITION_IMAGE_URL + conditionImage + IMAGE_EXTENSION
+        fun getWeatherConditionIconUrl(weather: WeatherResponse): Int {
+            val sunrise = DateTime(weather.sys.sunrise * 1000)
+            val isDay = sunrise.isBeforeNow
+
+            return when(weather.weather[0].id) {
+                200, 230 -> R.drawable.ic_light_thunderstorm_rain
+                201, 202, 221, 231, 232 -> R.drawable.ic_thunderstorm_rain
+                210, 211, 212 -> if(isDay) R.drawable.ic_thunderstorm_day else R.drawable.ic_thunderstorm_night
+
+                in 300..399 -> if(isDay) R.drawable.ic_drizzle_day else R.drawable.ic_drizzle_night
+
+                500, 501 -> R.drawable.ic_light_rain
+                502, 599 -> R.drawable.ic_heavy_rain
+
+                600, 601 -> if(isDay) R.drawable.ic_snow_day else R.drawable.ic_snow_night
+                in 602..699 -> R.drawable.ic_heavy_snow
+
+                in 701..780 -> R.drawable.ic_fog
+                781 -> R.drawable.ic_tornado
+
+                800 -> if(isDay) R.drawable.ic_clear_sky_day else R.drawable.ic_clear_sky_night
+
+                801, 802 -> if(isDay) R.drawable.ic_few_clouds_day else R.drawable.ic_few_clouds_night
+                803 -> R.drawable.ic_broken_clouds
+                804 -> R.drawable.ic_overcast_clouds
+
+                else -> R.drawable.ic_broken_clouds
+            }
         }
 
         fun formatUpdateTime(updateTime: Long): String {
