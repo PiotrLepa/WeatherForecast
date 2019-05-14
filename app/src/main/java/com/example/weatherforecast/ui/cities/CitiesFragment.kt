@@ -55,7 +55,7 @@ class CitiesFragment : DaggerFragment() {
         viewModel.citiesList.observe(viewLifecycleOwner, Observer { citiesList ->
             Timber.d("onActivityCreated: citiesList size: ${citiesList.size}")
             //if is something in room database
-            if (citiesList.size >= 1 ) {
+            if (citiesList.isNotEmpty()) {
                 viewModel.fetchCitiesWeathers(citiesList)
             }
         })

@@ -8,11 +8,7 @@ import com.example.weatherforecast.util.ForecastChartUtils
 import com.example.weatherforecast.util.ForecastChartUtils.Companion.filterDataForToday
 import com.example.weatherforecast.util.ForecastChartUtils.Companion.getHours
 import com.example.weatherforecast.util.ForecastChartUtils.Companion.getTempEntries
-import com.example.weatherforecast.util.WeatherUnitUtils
 import com.example.weatherforecast.util.wrapper.Resource
-import com.github.mikephil.charting.data.Entry
-import org.joda.time.DateTime
-import org.joda.time.format.DateTimeFormat
 import timber.log.Timber
 import javax.inject.Inject
 
