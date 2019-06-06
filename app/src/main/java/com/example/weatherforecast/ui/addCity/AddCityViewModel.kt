@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.weatherforecast.db.entity.City
 import com.example.weatherforecast.util.JsonFileReader
-import timber.log.Timber
 import java.util.ArrayList
 import javax.inject.Inject
 import java.text.Normalizer
@@ -15,6 +14,10 @@ import java.text.Normalizer
 class AddCityViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application) {
+
+    companion object {
+        private val REGEX_UNACCENT = "\\p{InCombiningDiacriticalMarks}+".toRegex()
+    }
 
     private lateinit var citiesList: List<City>
 
@@ -37,21 +40,20 @@ class AddCityViewModel @Inject constructor(
     }
 
     private fun filterCities(models: List<City>, query: String): List<City> {
-        val normalizedQuery = normalize(query.toLowerCase())
+        val normalizedQuery = query.toLowerCaseAndUnaccent()
         val filteredCityList = ArrayList<City>()
         for (city in models) {
-            val normalizedCityName = normalize(city.name.toLowerCase())
+            val normalizedCityName = city.name.toLowerCaseAndUnaccent()
             if (normalizedCityName.contains(normalizedQuery)) {
-                Timber.d("filterCities: $normalizedQuery $normalizedCityName")
                 filteredCityList.add(city)
             }
         }
         return filteredCityList
     }
 
-    private fun normalize(text: String): String {
-        return Normalizer
-            .normalize(text, Normalizer.Form.NFD)
-            .replace("\\p{InCombiningDiacriticalMarks}+", "")
+    private fun String.toLowerCaseAndUnaccent(): String {
+        val normalizer = Normalizer
+            .normalize(this.toLowerCase(), Normalizer.Form.NFD)
+        return REGEX_UNACCENT.replace(normalizer, "")
     }
 }
