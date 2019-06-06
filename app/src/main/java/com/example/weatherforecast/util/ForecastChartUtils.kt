@@ -8,7 +8,7 @@ class ForecastChartUtils {
 
     companion object {
 
-        fun filterDataForToday(weathers: List<WeatherResponse>): List<WeatherResponse> {
+        fun getTodayWeather(weathers: List<WeatherResponse>): List<WeatherResponse> {
             val dateFormat = WeatherUnitUtils.dateFormat
             val tomorrow = DateTime.now().withTimeAtStartOfDay().plusDays(1).plusSeconds(1) //plus second to get midnight
             return weathers.filter {
@@ -26,7 +26,7 @@ class ForecastChartUtils {
             }
         }
 
-        fun getHours(weathers: List<WeatherResponse>): List<DateTime.Property> {
+        fun getHoursToEndOfDay(weathers: List<WeatherResponse>): List<DateTime.Property> {
             val dateFormat = WeatherUnitUtils.dateFormat
             return weathers.map {
                 DateTime.parse(it.dt_txt, dateFormat).hourOfDay()

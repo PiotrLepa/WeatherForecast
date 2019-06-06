@@ -55,6 +55,7 @@ class AddCityFragment : DaggerFragment(), SearchView.OnQueryTextListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.add_city_toolbar_menu, menu)
+        menu.findItem(R.id.action_search).expandActionView()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

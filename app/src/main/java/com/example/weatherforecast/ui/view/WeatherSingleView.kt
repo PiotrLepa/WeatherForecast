@@ -7,49 +7,49 @@ import kotlin.random.Random
 class WeatherSingleView(
     color: Int,
     private val isMoveable: Boolean,
-    private var mLastX: Float,
-    private var mLastY: Float,
-    private val mRadius: Float,
-    private val mWidth: Int
+    private var x: Float,
+    private var y: Float,
+    private val radius: Float,
+    private val width: Int
 ) {
 
-    private val mPaint = Paint()
-    private var mSpeedX = 0.25f
-    private var mSpeedY = 0.25f
-    private var mMaxViewMoveX: Float = 0.toFloat()
-    private var mMaxViewMoveY: Float = 0.toFloat()
-    private var mViewMoveSumX = 0f
-    private var mViewMoveSumY = 0f
+    private val paint = Paint()
+    private var speedX = 0.25f
+    private var speedY = 0.25f
+    private var maxViewMoveX: Float = 0.toFloat()
+    private var maxViewMoveY: Float = 0.toFloat()
+    private var viewMoveSumX = 0f
+    private var viewMoveSumY = 0f
 
     init {
-        mPaint.color = color
+        paint.color = color
         init()
     }
 
     private fun init() {
-        mPaint.alpha = 100
-        mMaxViewMoveX = calculateMaxViewMove()
-        mMaxViewMoveY = calculateMaxViewMove()
+        paint.alpha = 150
+        maxViewMoveX = calculateMaxViewMove()
+        maxViewMoveY = calculateMaxViewMove()
     }
 
     fun move(canvas: Canvas, translationX: Float, translationY: Float) {
-        canvas.drawCircle(mLastX + translationX, mLastY + translationY, mRadius, mPaint)
+        canvas.drawCircle(x + translationX, y + translationY, radius, paint)
 
         if (!isMoveable) return
 
-        mLastY += mSpeedY
-        mLastX += mSpeedX
-        mViewMoveSumX += Math.abs(mSpeedX)
-        mViewMoveSumY += Math.abs(mSpeedY)
-        if (shouldChangeDirection(mMaxViewMoveX, mViewMoveSumX)) {
-            if (mSpeedX <= 0) mMaxViewMoveX = calculateMaxViewMove()
-            mViewMoveSumX = 0f
-            mSpeedX *= -1f
+        y += speedY
+        x += speedX
+        viewMoveSumX += Math.abs(speedX)
+        viewMoveSumY += Math.abs(speedY)
+        if (shouldChangeDirection(maxViewMoveX, viewMoveSumX)) {
+            if (speedX <= 0) maxViewMoveX = calculateMaxViewMove()
+            viewMoveSumX = 0f
+            speedX *= -1f
         }
-        if (shouldChangeDirection(mMaxViewMoveY, mViewMoveSumY)) {
-            if (mSpeedY <= 0) mMaxViewMoveY = calculateMaxViewMove()
-            mViewMoveSumY = 0f
-            mSpeedY *= -1f
+        if (shouldChangeDirection(maxViewMoveY, viewMoveSumY)) {
+            if (speedY <= 0) maxViewMoveY = calculateMaxViewMove()
+            viewMoveSumY = 0f
+            speedY *= -1f
         }
     }
 
@@ -58,6 +58,6 @@ class WeatherSingleView(
     }
 
     private fun calculateMaxViewMove(): Float {
-        return (mWidth / 40 * (Random.nextInt(3) + 1)).toFloat()
+        return (width / 40 * (Random.nextInt(3) + 1)).toFloat()
     }
 }
