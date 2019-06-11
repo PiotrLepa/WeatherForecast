@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherforecast.ui.addCity.AddCityViewModel
 import com.example.weatherforecast.ui.cities.CitiesViewModel
+import com.example.weatherforecast.ui.weather.ForecastViewModel
 import com.example.weatherforecast.ui.weather.WeatherViewModel
 import com.example.weatherforecast.util.WeatherForecastViewModelFactory
 import dagger.Binds
@@ -25,6 +26,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(CitiesViewModel::class)
     abstract fun bindCitiesViewModel(citiesViewModel: CitiesViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ForecastViewModel::class)
+    abstract fun bindForecastViewModel(forecastViewModel: ForecastViewModel): ViewModel
 
     @Binds
     @IntoMap

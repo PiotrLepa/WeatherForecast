@@ -29,6 +29,9 @@ interface WeatherDao {
     @Query("SELECT * FROM weather_forecast WHERE city_id = :cityId")
     fun getWeatherForecast(cityId: Int): LiveData<WeatherForecastResponse>
 
-    @Query("SELECT * FROM citiesWeathers ORDER BY insertTime DESC LIMIT 1")
+    @Query("SELECT * FROM citiesWeathers LIMIT 1")
     fun getLatestInsertedWeather(): LiveData<WeatherResponse>
+
+    @Query("SELECT * FROM weather_forecast LIMIT 1")
+    fun getLatestInsertedForecast(): LiveData<WeatherForecastResponse>
 }

@@ -1,43 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+<RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.weather.WeatherFragment"
-        android:id="@+id/swipeRefreshLayout"
         android:background="@color/blue">
 
-
-    <RelativeLayout
+    <com.example.weatherforecast.ui.view.WeatherView
+            android:id="@+id/weatherView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="@dimen/weatherViewSize"/>
 
-        <com.example.weatherforecast.ui.view.WeatherView
-                android:id="@+id/weatherView"
+    <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/weatherViewSize"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <androidx.core.widget.NestedScrollView
-                android:id="@+id/scrollView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <LinearLayout
+            <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:layout_height="@dimen/weatherViewSize"/>
 
-                <View
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/weatherViewSize"/>
+            <include layout="@layout/snippet_weather"/>
 
-                <include layout="@layout/snippet_weather"/>
+        </LinearLayout>
 
-            </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        </androidx.core.widget.NestedScrollView>
-
-    </RelativeLayout>
-
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</RelativeLayout>

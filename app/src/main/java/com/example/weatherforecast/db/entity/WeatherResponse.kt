@@ -31,6 +31,5 @@ data class WeatherResponse(
     val sys: Sys,
     val weather: List<Weather>,
     @Embedded(prefix = "wind_")
-    val wind: Wind,
-    val insertTime: Long = System.currentTimeMillis()
+    val wind: Wind
 ) : Parcelable

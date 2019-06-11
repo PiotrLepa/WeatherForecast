@@ -105,13 +105,13 @@ class CitiesFragment : DaggerFragment() {
         citiesRecyclerView.layoutManager = LinearLayoutManager(this.context, RecyclerView.VERTICAL, false)
         citiesRecyclerView.adapter = citiesWeatherAdapter
         citiesWeatherAdapter.setOnItemClickListener { item, _ ->
-            openWeatherFragment((item as CityWeatherItem))
+            openForecastFragment((item as CityWeatherItem))
         }
     }
 
-    private fun openWeatherFragment(item: CityWeatherItem) {
-        val action = CitiesFragmentDirections.actionCitiesFragmentToWeatherFragment()
-        action.selectedCity = item.weather
+    private fun openForecastFragment(item: CityWeatherItem) {
+        val action = CitiesFragmentDirections.actionCitiesFragmentToForecastFragment()
+        action.selectedCityId = item.weather.id
         findNavController().navigate(action)
     }
 

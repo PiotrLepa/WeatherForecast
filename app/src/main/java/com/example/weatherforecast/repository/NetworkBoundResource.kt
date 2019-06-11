@@ -29,7 +29,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>
         val dbSource = loadFromDb()
         Timber.d("init started: ")
         result.addSource(dbSource) { data ->
-            Timber.d("init data: $data")
+            Timber.d("init data")
             result.removeSource(dbSource)
             if (shouldFetch(data)) {
                 fetchFromNetwork(dbSource)

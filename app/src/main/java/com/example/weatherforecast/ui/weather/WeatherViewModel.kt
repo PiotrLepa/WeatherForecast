@@ -5,8 +5,7 @@ import com.example.weatherforecast.db.entity.WeatherForecastResponse
 import com.example.weatherforecast.db.entity.WeatherResponse
 import com.example.weatherforecast.repository.WeatherForecastRepository
 import com.example.weatherforecast.util.ForecastChartUtils
-import com.example.weatherforecast.util.ForecastChartUtils.Companion.getTodayWeather
-import com.example.weatherforecast.util.ForecastChartUtils.Companion.getHoursToEndOfDay
+import com.example.weatherforecast.util.ForecastChartUtils.Companion.getHours
 import com.example.weatherforecast.util.ForecastChartUtils.Companion.getTempEntries
 import com.example.weatherforecast.util.wrapper.Resource
 import timber.log.Timber
@@ -57,9 +56,9 @@ class WeatherViewModel @Inject constructor(
     }
 
     fun onForecastFetched(weathers: List<WeatherResponse>) {
-        val todayWeathers = getTodayWeather(weathers)
-        val tempEntries = getTempEntries(todayWeathers)
-        val hours = getHoursToEndOfDay(todayWeathers)
+//        val todayWeathers = getTodayWeather(weathers)
+        val tempEntries = getTempEntries(weathers)
+        val hours = getHours(weathers)
 
         _chartData.value = ForecastChartUtils.LineDataValue(tempEntries, hours)
     }

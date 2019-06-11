@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable
 import com.example.weatherforecast.R
 import com.example.weatherforecast.db.entity.WeatherResponse
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
 import org.joda.time.format.DateTimeFormat
 import timber.log.Timber
 
@@ -92,8 +93,23 @@ class WeatherUnitUtils {
             }
         }
 
+        fun formatDate(date: String?): String {
+            return if (date == null) {
+                ""
+            } else {
+                val today = LocalDate.now()
+                Timber.d("formatDate: today: $today  dateTime: ${DateTime.parse(date, dateFormat).toLocalDate()}")
+                when (val dateTime = DateTime.parse(date, dateFormat).toLocalDate().toString()) {
+                    today.toString() -> "Today"
+                    today.plusDays(1).toString() -> "Tomorrow"
+                    else -> dateTime
+                }
+            }
+        }
+
         fun formatUpdateTime(updateTime: Long): String {
-            val timeDifference = System.currentTimeMillis() / 1000 - updateTime
+            Timber.d("formatUpdateTime: current: ${System.currentTimeMillis()}   updateTime: $updateTime")
+            val timeDifference = System.currentTimeMillis() - updateTime
             Timber.d("formatUpdateTime: timeDifference: $timeDifference")
 //            return if (timeDifference < WEATHER_API_REFRESH_DELAY) {
 //                "Just Updated"

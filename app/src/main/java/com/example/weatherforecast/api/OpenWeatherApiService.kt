@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import com.example.weatherforecast.db.entity.WeatherForecastResponse
 import com.example.weatherforecast.db.entity.WeatherResponse
 import com.example.weatherforecast.db.entity.WeathersListResponse
-import com.example.weatherforecast.util.LiveDataCallAdapterFactory
+import com.example.weatherforecast.util.retrofitAdapters.LiveDataCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

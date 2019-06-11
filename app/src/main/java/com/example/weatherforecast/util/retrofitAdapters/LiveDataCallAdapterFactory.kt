@@ -1,4 +1,4 @@
-package com.example.weatherforecast.util
+package com.example.weatherforecast.util.retrofitAdapters
 
 import androidx.lifecycle.LiveData
 import com.example.weatherforecast.api.ApiResponse
