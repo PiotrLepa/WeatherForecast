@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -26,7 +27,7 @@ import kotlinx.android.synthetic.main.forecast_fragment.*
 import timber.log.Timber
 import javax.inject.Inject
 
-const val DAY_COUNT_WEATHER_FORECAST = 5;
+const val DAY_COUNT_WEATHER_FORECAST = 5
 
 class ForecastFragment : DaggerFragment() {
 
@@ -47,23 +48,11 @@ class ForecastFragment : DaggerFragment() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(ForecastViewModel::class.java)
 
+        viewModel.onFragmentCreated(getSelectedCityIdArgs())
+
         setupPullToRefresh()
 
-        val selectedCityId = getSelectedCityIdArgs()
-        Timber.d("onActivityCreated: selectedCityId: $selectedCityId")
-        if (selectedCityId != null) {
-            viewModel.fetchWeatherForecast(selectedCityId)
-        } else {
-            viewModel.loadLatestFetchedForecast()
-        }
-
         observeWeatherForecast()
-    }
-
-    private fun setupPullToRefresh() {
-        swipeRefreshLayout.setOnRefreshListener {
-            viewModel.refreshWeather()
-        }
     }
 
     private fun getSelectedCityIdArgs(): Int? {
@@ -72,6 +61,12 @@ class ForecastFragment : DaggerFragment() {
             safeArgs.selectedCityId
         } else {
             null
+        }
+    }
+
+    private fun setupPullToRefresh() {
+        swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshWeather()
         }
     }
 
@@ -123,23 +118,28 @@ class ForecastFragment : DaggerFragment() {
             WeatherUnitUtils.formatDate(weathersDays[0][0].dt_txt)
 
         weathersViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-        override fun onPageScrollStateChanged(state: Int) {
-        }
+            override fun onPageScrollStateChanged(state: Int) {
+                enableDisableSwipeRefresh(state == ViewPager.SCROLL_STATE_IDLE)
+            }
 
-        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        }
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
 
-        override fun onPageSelected(position: Int) {
-            (activity as MainActivity).supportActionBar?.subtitle =
-                WeatherUnitUtils.formatDate(weathersDays[position][0].dt_txt)
-        }
+            override fun onPageSelected(position: Int) {
+                (activity as MainActivity).supportActionBar?.subtitle =
+                    WeatherUnitUtils.formatDate(weathersDays[position][0].dt_txt)
+            }
         })
+    }
+
+    private fun enableDisableSwipeRefresh(enable: Boolean) {
+        swipeRefreshLayout.isEnabled = enable
     }
 
     private class ScreenSlidePageAdapter(
         fragmentManager: FragmentManager,
         private val fragmentsList: List<Fragment>
-    ): FragmentPagerAdapter(fragmentManager) {
+    ): FragmentStatePagerAdapter(fragmentManager) {
 
         override fun getItem(position: Int) = fragmentsList[position]
 

@@ -6,35 +6,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherforecast.R
 
 import com.example.weatherforecast.db.entity.WeatherResponse
-import com.example.weatherforecast.ui.MainActivity
 import com.example.weatherforecast.util.WeatherUnitUtils.Companion.formatAirHumidity
 import com.example.weatherforecast.util.WeatherUnitUtils.Companion.formatAtmosphericPressure
 import com.example.weatherforecast.util.WeatherUnitUtils.Companion.formatTemperature
-import com.example.weatherforecast.util.WeatherUnitUtils.Companion.formatUpdateTime
 import com.example.weatherforecast.util.WeatherUnitUtils.Companion.formatVisibility
 import com.example.weatherforecast.util.WeatherUnitUtils.Companion.formatWindDegree
 import com.example.weatherforecast.util.WeatherUnitUtils.Companion.formatWindSpeed
+import com.example.weatherforecast.util.ForecastChartUtils.LineDataValue
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.weather_fragment.*
 import timber.log.Timber
 import javax.inject.Inject
-import com.example.weatherforecast.util.wrapper.Status.LOADING
-import com.example.weatherforecast.util.wrapper.Status.SUCCESS
-import com.example.weatherforecast.util.wrapper.Status.ERROR
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import kotlinx.android.synthetic.main.snippet_weather.*
 import android.graphics.Typeface
 import com.example.weatherforecast.FORECAST_FRAGMENT_WEATHER_ARG
-import com.example.weatherforecast.util.ForecastChartUtils
 import com.example.weatherforecast.util.WeatherUnitUtils.Companion.formatCloudiness
-import com.example.weatherforecast.util.WeatherUnitUtils.Companion.formatDate
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.formatter.ValueFormatter
 
@@ -70,58 +62,19 @@ class WeatherFragment : DaggerFragment() {
 
         setupChart()
 
-        val weathers = getWeatherArgs()
-        if (weathers != null) {
-            val currentWeather = weathers[0]
+        val dayWeatherForecast = getWeatherArgs()
+        if (dayWeatherForecast != null) {
+            val currentWeather = dayWeatherForecast[0]
             updateUi(currentWeather)
-            viewModel.onForecastFetched(weathers)
-        } else {
-//            viewModel.loadLatestFetchedWeather()
+            viewModel.onForecastFetched(dayWeatherForecast)
         }
 
-//        observeCurrentWeather()
-//        observerForecastWeather()
         observeChartData()
     }
 
-//    private fun observeCurrentWeather() {
-//        viewModel.weather.observe(viewLifecycleOwner, Observer {
-//            Timber.d("onActivityCreated weather: $it")
-//            when (it.status) {
-//                LOADING -> {
-//
-//                }
-//                SUCCESS -> {
-//                    swipeRefreshLayout.isRefreshing = false
-//                    updateUi(it.data!!)
-//                }
-//                ERROR -> {
-//                    swipeRefreshLayout.isRefreshing = false
-//                    Toast.makeText(context, "Updating error", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        })
-//    }
-//
-//    private fun observerForecastWeather() {
-//        viewModel.weatherForecast.observe(viewLifecycleOwner, Observer {
-//            Timber.d("onActivityCreated weatherForecast status: ${it.status}")
-//            when (it.status) {
-//                LOADING -> {
-//
-//                }
-//                SUCCESS -> {
-//                    Timber.d("onActivityCreated weatherForecast size: ${it.data!!.weathers.size}")
-//                    swipeRefreshLayout.isRefreshing = false
-//                    viewModel.onForecastFetched(it.data.weathers)
-//                }
-//                ERROR -> {
-//                    swipeRefreshLayout.isRefreshing = false
-//                    Toast.makeText(context, "Updating error", Toast.LENGTH_SHORT).show()
-//                }
-//            }
-//        })
-//    }
+    private fun getWeatherArgs(): ArrayList<WeatherResponse>? {
+        return arguments?.getParcelableArrayList(FORECAST_FRAGMENT_WEATHER_ARG)
+    }
 
     private fun observeChartData() {
         viewModel.chartData.observe(viewLifecycleOwner, Observer {
@@ -150,7 +103,7 @@ class WeatherFragment : DaggerFragment() {
         chart.invalidate()
     }
 
-    private fun setChartData(lineDataValues: ForecastChartUtils.LineDataValue) {
+    private fun setChartData(lineDataValues: LineDataValue) {
         val tempSet = LineDataSet(lineDataValues.tempEntries, "Temperatures")
         setupLineDataSet(tempSet)
 
@@ -186,12 +139,7 @@ class WeatherFragment : DaggerFragment() {
         set.fillAlpha = 100
     }
 
-    private fun getWeatherArgs(): ArrayList<WeatherResponse>? {
-        return arguments?.getParcelableArrayList(FORECAST_FRAGMENT_WEATHER_ARG)
-    }
-
     private fun updateUi(data: WeatherResponse) {
-//        updateToolbar(data.dt_txt)
         weatherCondition.text = data.weather[0].main
         weatherConditionDescription.text = data.weather[0].description
 
@@ -207,9 +155,4 @@ class WeatherFragment : DaggerFragment() {
         visibilityText.text = formatVisibility(data.main.humidity)
         cloudinessText.text = formatCloudiness(data.clouds.all)
     }
-
-//    private fun updateToolbar(date: String?) {
-//        Timber.d("updateToolbarDate: ${this}")
-//        (activity as MainActivity).supportActionBar?.subtitle = formatDate(date)
-//    }
 }

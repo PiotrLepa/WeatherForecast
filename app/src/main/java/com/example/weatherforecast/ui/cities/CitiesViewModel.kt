@@ -15,13 +15,6 @@ class CitiesViewModel @Inject constructor(
     private val repo: WeatherForecastRepository
 ): ViewModel() {
 
-    private val fetchCities = MutableLiveData<Boolean>()
-    val citiesList: LiveData<List<City>> =
-        Transformations.switchMap(fetchCities) {
-            Timber.d("switchMap citiesList: fetchCities: $it")
-            return@switchMap repo.getCitiesList()
-        }
-
     private val citiesIds = MutableLiveData<List<Int>>()
     val citiesWeathers: LiveData<Resource<List<WeatherResponse>>> =
         Transformations.switchMap(citiesIds) { citiesIds ->
@@ -29,8 +22,8 @@ class CitiesViewModel @Inject constructor(
             return@switchMap repo.getCitiesWeathersList(citiesIds)
         }
 
-    init {
-        fetchCities.value = true
+    val citiesList: LiveData<List<City>> by lazy {
+        repo.getCitiesList()
     }
 
     fun fetchCitiesWeathers(citiesList: List<City>) {

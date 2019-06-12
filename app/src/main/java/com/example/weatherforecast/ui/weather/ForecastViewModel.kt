@@ -3,12 +3,13 @@ package com.example.weatherforecast.ui.weather
 import androidx.lifecycle.*
 import com.example.weatherforecast.db.entity.WeatherForecastResponse
 import com.example.weatherforecast.repository.WeatherForecastRepository
+import com.example.weatherforecast.CityProvider
 import com.example.weatherforecast.util.wrapper.Resource
-import timber.log.Timber
 import javax.inject.Inject
 
 class ForecastViewModel @Inject constructor(
-    private val repo: WeatherForecastRepository
+    private val repo: WeatherForecastRepository,
+    private val cityProvider: CityProvider
 ) : ViewModel() {
 
     private val cityIdLive = MutableLiveData<Int>()
@@ -17,22 +18,25 @@ class ForecastViewModel @Inject constructor(
             return@switchMap repo.fetchForecast(it)
         }
 
+    fun onFragmentCreated(selectedCityId: Int?) {
+        if (selectedCityId != null) {
+            fetchWeatherForecast(selectedCityId)
+            cityProvider.saveCityId(selectedCityId)
+        } else {
+            val cachedCityId = cityProvider.getCityId()
+            if (cachedCityId != null) {
+                fetchWeatherForecast(cachedCityId)
+            } else {
+                //TODO first app launch
+            }
+        }
+    }
+
     fun refreshWeather() {
         cityIdLive.value = cityIdLive.value
     }
 
-    fun fetchWeatherForecast(cityId: Int) {
+    private fun fetchWeatherForecast(cityId: Int) {
         cityIdLive.value = cityId
-    }
-
-    fun loadLatestFetchedForecast() {
-        val latestForecast = repo.getLatestInsertedForecast()
-        latestForecast.observeForever(object : Observer<WeatherForecastResponse> {
-            override fun onChanged(forecast: WeatherForecastResponse?) {
-                latestForecast.removeObserver(this)
-                Timber.d("onChanged: loadLatestFetchedForecast: ${forecast?.city}")
-                forecast?.let { cityIdLive.value = it.city.id }
-            }
-        })
     }
 }

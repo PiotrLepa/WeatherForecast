@@ -42,14 +42,6 @@ class WeatherForecastRepository @Inject constructor(
         return cityDao.getCitiesList()
     }
 
-    fun getLatestInsertedWeather(): LiveData<WeatherResponse> {
-        return weatherDao.getLatestInsertedWeather()
-    }
-
-    fun getLatestInsertedForecast(): LiveData<WeatherForecastResponse> {
-        return weatherDao.getLatestInsertedForecast()
-    }
-
     fun fetchForecast(cityId: Int): LiveData<Resource<WeatherForecastResponse>> {
         return object: NetworkBoundResource<WeatherForecastResponse, WeatherForecastResponse>(appExecutors) {
             override fun saveCallResult(item: WeatherForecastResponse) {
