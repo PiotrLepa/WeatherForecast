@@ -3,6 +3,7 @@ package com.example.weatherforecast.ui.addCity
 import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.ActionMenuView
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -55,16 +56,10 @@ class AddCityFragment : DaggerFragment(), SearchView.OnQueryTextListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.add_city_toolbar_menu, menu)
-        menu.findItem(R.id.action_search).expandActionView()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId ==R.id.action_search) {
-            Timber.d("onOptionsItemSelected: actionSearch clicked")
-            val searchView = item.actionView as SearchView
-            searchView.setOnQueryTextListener(this)
+        menu.findItem(R.id.action_search).run {
+            setupSearchView(this)
+            expandActionView()
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
@@ -76,6 +71,11 @@ class AddCityFragment : DaggerFragment(), SearchView.OnQueryTextListener {
 
     override fun onQueryTextSubmit(query: String?) = false
 
+    private fun setupSearchView(item: MenuItem) {
+        Timber.d("setupSearchView: started")
+        val searchView = item.actionView as SearchView
+        searchView.setOnQueryTextListener(this)
+    }
 
     private fun setupRecyclerView() {
         citiesAdapter = GroupAdapter()
