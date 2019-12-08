@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools" android:id="@+id/mobile_navigation"
+            app:startDestination="@id/forecastFragment">
+
+    <fragment
+            android:id="@+id/citiesFragment"
+            android:name="com.example.weatherforecast.ui.cities.CitiesFragment"
+            android:label="Select city"
+            tools:layout="@layout/cities_fragment">
+        <action
+                android:id="@+id/action_citiesFragment_to_addCityFragment"
+                app:destination="@id/addCityFragment"/>
+        <argument
+                android:name="selectedCity"
+                app:argType="com.example.weatherforecast.db.entity.City"
+                app:nullable="true" android:defaultValue="@null"/>
+        <action android:id="@+id/action_citiesFragment_to_forecastFragment" app:destination="@id/forecastFragment"
+                app:popUpToInclusive="true" app:popUpTo="@+id/forecastFragment"/>
+    </fragment>
+    <fragment
+            android:id="@+id/addCityFragment"
+            android:name="com.example.weatherforecast.ui.addCity.AddCityFragment"
+            android:label="Search city"
+            tools:layout="@layout/add_city_fragment">
+        <action
+                android:id="@+id/action_addCityFragment_to_citiesFragment"
+                app:destination="@id/citiesFragment"
+                app:popUpTo="@+id/citiesFragment" app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment android:id="@+id/forecastFragment" android:name="com.example.weatherforecast.ui.weather.ForecastFragment"
+              android:label="forecast_fragment" tools:layout="@layout/forecast_fragment">
+        <argument android:name="selectedCityId" app:argType="integer"
+                  android:defaultValue="-1"/>
+    </fragment>
+</navigation>
